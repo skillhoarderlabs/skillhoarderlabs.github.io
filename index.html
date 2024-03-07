@@ -1,7 +1,82 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ESP32 GPIO Pin Configurator</title>
+<style>
+    .separator {
+        margin-top: 20px;
+        border-bottom: 2px solid #000;
+    }
+    .device-config {
+        margin-top: 20px;
+    }
+</style>
+</head>
 <body>
-<h1>Hello World</h1>
-<p>I'm hosted with GitHub Pages.</p>
+
+<div id="deviceCreationSection">
+    <input type="text" id="deviceName" placeholder="Enter device name">
+    <select id="pinCount">
+        <!-- Populate the dropdown with numbers 1-22 -->
+        <option value="">Select Pin Count</option>
+        <!-- JS will populate this -->
+    </select>
+    <button onclick="createDevice()">Create Device</button>
+</div>
+<div class="separator"></div>
+<div id="deviceConfigurationSection" class="device-config">
+    <!-- Device configuration fields will be added here -->
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    populatePinCountOptions();
+});
+
+function populatePinCountOptions() {
+    const pinCountSelector = document.getElementById('pinCount');
+    for (let i = 1; i <= 22; i++) {
+        const option = document.createElement('option');
+        option.value = i;
+        option.text = i;
+        pinCountSelector.appendChild(option);
+    }
+}
+
+function createDevice() {
+    const deviceName = document.getElementById('deviceName').value;
+    const pinCount = document.getElementById('pinCount').value;
+    const deviceConfigSection = document.getElementById('deviceConfigurationSection');
+
+    if (!deviceName || !pinCount) {
+        alert('Please enter a device name and select the number of GPIO pins required.');
+        return;
+    }
+
+    for (let i = 1; i <= pinCount; i++) {
+        const label = document.createElement('label');
+        label.innerHTML = `${deviceName} Signal ${i}: `;
+        deviceConfigSection.appendChild(label);
+
+        const select = document.createElement('select');
+        const options = ['GND', '5V', '3.3V', 'Digital Input', 'Digital Output', 'Analog Input', 'PWM', 'Touch Input', 'RX', 'TX', 'I2C - SDA', 'I2C - SCL', 'SPI - MOSI', 'SPI - MISO', 'SPI - SCK', 'SPI - CS'];
+        options.forEach(optionValue => {
+            const option = document.createElement('option');
+            option.value = optionValue;
+            option.text = optionValue;
+            select.appendChild(option);
+        });
+        deviceConfigSection.appendChild(select);
+        deviceConfigSection.appendChild(document.createElement('br'));
+    }
+
+    // Clear inputs after creation
+    document.getElementById('deviceName').value = '';
+    document.getElementById('pinCount').value = '';
+}
+
+</script>
 </body>
 </html>
